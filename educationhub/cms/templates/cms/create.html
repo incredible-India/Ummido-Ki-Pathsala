@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+
+<title>Create</title>
+{% endblock title %}
+
+{% block content %}
+
+{% include 'core/navbar.html' %}
+
+
+
+
+{% if messages %}
+{% for k in messages %} 
+
+<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+    <strong>{{k}}</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+
+{% endfor %}
+{% endif %}
+
+<h3 class="text-dark text-center">Create Account</h3>
+
+
+<div class="container alert alert-danger">
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="text" name="name" id="name" placeholder="Name" class="form-control mt-2">
+        <input type="email" name="email" id="email" placeholder="email" class="form-control mt-2">
+        <input type="password" name="password" id="password" placeholder="password" class="form-control mt-2">
+
+        <input type="submit" value="Submit" class="btn btn-primary mt-2">
+    </form>
+</div>
+
+
+<hr>
+<div class="container mt-2">
+    <a href="{% url 'logincms' %}" class="btn btn-warning">Log in</a>
+</div>
+{% endblock content %}

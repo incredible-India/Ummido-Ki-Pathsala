@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+
+<title>Login</title>
+
+{% endblock title %}
+
+
+{% block content %}
+
+
+{% include 'core/navbar.html' %}
+
+{% if messages %}
+{% for k in messages %} 
+
+<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+    <strong>{{k}}</strong> You should check in on some of those fields below.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+
+{% endfor %}
+{% endif %}
+<div class="mt-2 container">
+
+    <h3 class="display-5 text-dark text-center">
+        Log in
+    </h3>
+
+    <div class="alert alert-success mt-2 container">
+        <form action="" method='post'>
+
+        {% csrf_token %}
+
+        <input type="email" name="email" id="email" placeholder="Email" class="form-control mt-2">
+        <input type="password" name="password" id="password" placeholder="password" class="form-control mt-2">
+
+        <input type="submit" value="Log in" class="btn btn-primary mt-2">
+
+        
+        </form>
+    </div>
+
+    <hr>
+
+    <a href="{% url 'createcms' %}" class="btn btn-info mt-2 container mx-2">Create Account</a>
+</div>
+
+{% endblock content %}
