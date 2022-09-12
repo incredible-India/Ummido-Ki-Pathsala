@@ -11,4 +11,5 @@ urlpatterns = [
     path('home/',views.home.as_view(),name='home'),
     path('addcourse/',views.addcourse.as_view(),name='addcourse'),
     path('delete/<slug:book>/',views.deleteCourse.as_view(),name='deletecourse'),
+    path('open/<slug:book>/',views.openCourse.as_view(),name='opencourse'),
 ]

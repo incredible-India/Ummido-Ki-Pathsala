@@ -48,7 +48,7 @@
 
             {% for i in course %}
             <tr>
-            <td><p><b><a href="" class='text-dark'> {{i.cname | capfirst}}</a></b></p></td>
+            <td><p><b><a href="{% url 'opencourse' book=i.slug %}" class='text-dark'> {{i.cname | capfirst}}</a></b></p></td>
 
             {% if i.disp == '' %}
             <td>No Dispcription</td>

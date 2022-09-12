@@ -1,0 +1,173 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block title %}
+<title>Course</title>
+{% endblock title %}
+
+
+{% block content %}
+
+{% include 'core/navbar.html' %}
+
+
+<div class="container mt-2">
+    <p><b class="text-center bg-dark text-light">Teacher Portal</b></p>
+
+    
+    <p class="text-dark mt-2"><b>Welcome <span class="text-success">{{name | capfirst  }}</span> <br>{{email}} </b>  </p>
+
+    <p><b class="text-danger"><a href="{% url 'logoutcms' %}" class="text-danger">Logout <i class="fa-solid fa-power-off"></i></a>  </b></p>
+    <p><b class="text-danger"><a href="{% url 'home' %}" class="text-primary">My Courses <i class="fas fa-book"></i></a>  </b></p>
+
+    <hr>
+
+</div>
+
+
+<div class="container mt-2">
+
+
+   {% if course %}
+   
+
+   {% for i in course %}
+   
+   <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* Create a column layout with Flexbox */
+    .row {
+      display: flex;
+    }
+    
+    /* Left column (menu) */
+    .left {
+      flex: 35%;
+      padding: 15px 0;
+    }
+    
+    .left h2 {
+      padding-left: 8px;
+    }
+    
+    /* Right column (page content) */
+    .right {
+      flex: 65%;
+      padding: 15px;
+    }
+    
+    /* Style the search box */
+    #mySearch {
+      width: 100%;
+      font-size: 18px;
+      padding: 11px;
+      border: 1px solid #ddd;
+    }
+    
+    /* Style the navigation menu inside the left column */
+    #myMenu {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    #myMenu li a {
+      padding: 12px;
+      text-decoration: none;
+      color: black;
+      display: block
+    }
+    
+    #myMenu li a:hover {
+      background-color: #eee;
+    }
+    </style>
+
+    
+    <h2 class='text-center'>Course Details</h2>
+
+    
+    
+    
+    <div class="row">
+      <div class="left" style="background-color:#bbb;">
+        <h2 >Chapters</h2>
+        <input type="text" id="mySearch" onkeyup="myFunction()" placeholder="Search.." title="Type in a category">
+        <ul id="myMenu">
+          <li><a href="#">HTML</a></li>
+          <li><a href="#">CSS</a></li>
+          <li><a href="#">JavaScript</a></li>
+          <li><a href="#">PHP</a></li>
+          <li><a href="#">Python</a></li>
+          <li><a href="#">jQuery</a></li>
+          <li><a href="#">SQL</a></li>
+          <li><a href="#">Bootstrap</a></li>
+          <li><a href="#">Node.js</a></li>
+        </ul>
+      </div>
+      
+      <div class="right" style="background-color:#ddd;">
+        
+        <h2>{{i.cname | capfirst }}</h2>
+
+        {% if i.cimg == 'False' %}
+            
+      
+            <img src="{% static 'cms/img/book.jpeg' %}" alt="default image" class="img-fluid" style='width:200px; height:200px; ' title="this is the default image">          
+        
+                    {% else %}
+         
+            <img src="{{ i.cimg.url }}" alt="course image" class="img-fluid" style='width:200px; height:200px; '>
+            
+      
+        
+                    {% endif %}
+
+                    {% if i.disp == '' %}
+    <p class='mt-2'><b>No Dispcription</b></p>
+    {% else %}
+    <p  class='mt-2'><b>{{i.disp | capfirst }}</b></p>
+    {% endif %}
+       
+      </div>
+    </div>
+    
+    <script>
+    function myFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("mySearch");
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("myMenu");
+      li = ul.getElementsByTagName("li");
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+    </script>
+   
+   {% endfor %}
+
+   {% else %}
+   <h3 class="text-center">Something went wrong !!!</h3>
+
+   {% endif %}
+        
+        
+
+
+</div>
+
+{% endblock content %}

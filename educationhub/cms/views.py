@@ -142,7 +142,7 @@ class deleteCourse(View):
 
                 if isexist:
 
-                    course.objects.filter(slug=book).delete()
+                    course.objects.filter(Q(slug=book) & Q(user= teacher.objects.get(email=email))).delete()
                     return HttpResponseRedirect('/cms/home/')
                 else:
                     return HttpResponse('Invalid Request')
@@ -150,3 +150,29 @@ class deleteCourse(View):
                 return render(request,'cms/login.html')
         else:
              return render(request,'cms/login.html')
+
+
+class openCourse(View):
+    def get(self, request,book):
+        if 'email' in request.session:
+            if 'name' in request.session:
+                name = request.session['name']
+                email = request.session['email']
+
+                isexist = teacher.objects.filter(Q(email=email) & Q(name=name)).exists()
+
+                if isexist:
+                    courses = course.objects.filter(Q(slug=book) & Q(user= teacher.objects.get(email=email)))
+
+                    if courses.exists():
+                        return render(request, 'cms/course.html',{
+                            'name' :name,'email' :email,'course':courses
+                        })
+                    else:
+                        return HttpResponse('invalid request')
+                else:
+                    return render(request,'cms/login.html')
+            else:
+                return render(request,'cms/login.html')
+        else:
+            return render(request,'cms/login.html')
