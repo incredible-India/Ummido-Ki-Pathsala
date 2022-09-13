@@ -94,27 +94,33 @@
     
     <h2 class='text-center'>Course Details</h2>
 
+    <a href="{% url 'addchapter' book=i.slug %}" class="btn btn-info mt-2">Add Chapter</a>
     
     
-    
-    <div class="row">
+    <div class="row mt-2">
       <div class="left" style="background-color:#bbb;">
-        <h2 >Chapters</h2>
+        <h2 >Chapters   </h2>
         <input type="text" id="mySearch" onkeyup="myFunction()" placeholder="Search.." title="Type in a category">
         <ul id="myMenu">
-          <li><a href="#">HTML</a></li>
-          <li><a href="#">CSS</a></li>
-          <li><a href="#">JavaScript</a></li>
-          <li><a href="#">PHP</a></li>
-          <li><a href="#">Python</a></li>
-          <li><a href="#">jQuery</a></li>
-          <li><a href="#">SQL</a></li>
-          <li><a href="#">Bootstrap</a></li>
-          <li><a href="#">Node.js</a></li>
+
+          {% if chapters %}
+          
+          {% for i in chapters %}
+          <li><a href="{% url 'openchapter' book=subjectslug chapterslug=i.slug  %}">{{i.title | capfirst }}</a></li>
+          {% endfor %}
+
+          {% else %}
+          <li><a href="#">No chapters found</a></li>
+         
+          {% endif %}
+
+         
         </ul>
       </div>
       
       <div class="right" style="background-color:#ddd;">
+       
+        {% if ch %}
         
         <h2>{{i.cname | capfirst }}</h2>
 
@@ -130,7 +136,7 @@
       
         
                     {% endif %}
-
+        <div class="mt-2">Course Dispcription</div>
                     {% if i.disp == '' %}
     <p class='mt-2'><b>No Dispcription</b></p>
     {% else %}
@@ -138,6 +144,141 @@
     {% endif %}
        
       </div>
+{% else %}
+
+
+{% comment %} for the perticular chapters  {% endcomment %}
+
+{% comment %} ch=false   {% endcomment %}
+
+
+{% if chapterdata %}
+
+<h2 class="alert alert-danger">{{coursename | capfirst }}</h2>
+
+{% for i in chapterdata %}
+
+<em>updated : {{i.dateof}}</em>
+
+<h3 class="alert alert-info">Chapter : {{i.title | capfirst}}</h3>
+<hr>
+
+<div class="mt-2">
+  <h4>Dispcription</h4>
+  <p class="alert alert-primary"><b>{{i.disp}}</b></p>
+</div>
+
+<div class="container mt-2">
+  {% if i.chimg != 'False' %}
+  
+  <a href="{{i.chimg.url}}" target="_blank"><img src="{{ i.chimg.url }}" alt="image" class="img-fluid" style='width:200px; height:200px; '></a>
+
+  {% endif %}
+
+  {% if i.chfiles != 'False' %}
+
+  <div class="container mt-2">
+
+    <h5>Linked Files</h5>
+
+    <a href="{{i.chfiles.url }}" target="_blank">
+      
+      <iframe src="{{i.chfiles.url}}" frameborder="0"></iframe>
+      PDF<i class="fa-solid fa-file-pdf" ></i>
+    </a>
+    <br>
+    <a href="{{i.chfiles.url}}" target="_blank"><img src="{{ i.chfiles.url }}" alt="image" class="img-fluid" style='width:200px; height:200px; '></a>
+      <br>
+      <video width="320" height="240" controls class="mt-4">
+        <source src="{{i.chfiles.url}}" type="video/mp4">
+        <source src="{{i.chfiles.url}}" type="video/mkv">
+        Your browser does not support the video tag.
+      </video>
+  
+
+     
+
+  </div>
+  {% endif %}
+
+
+  {% if   contents %}
+      
+  {% for j in contents %}
+  
+  <hr class="text-success">
+
+  <div class="mt-2">
+
+    <h3 class="mt-2 alert alert-warning">{{j.title | capfirst }}</h3>
+
+  </div>
+
+  <div class="mt-2">
+    <h4>Dispcription</h4>
+    <p class="alert alert-primary"><b>{{j.dispcription}}</b></p>
+  </div>
+  
+  {% if j.chimg != 'False' %}
+  
+  <a href="{{j.chimg.url}}" target="_blank"><img src="{{ j.chimg.url }}" alt="image" class="img-fluid" style='width:200px; height:200px; '></a>
+  
+  {% endif %}
+
+
+  {% if j.chfiles != 'False' %}
+  
+
+
+  <div class="container mt-2">
+
+    <h5>Linked Files</h5>
+
+    
+    <a href="{{j.chfiles.url }}" target="_blank">
+      
+      <iframe src="{{j.chfiles.url}}" frameborder="0"></iframe>
+      <h3><i class="fa-solid fa-file-pdf" ></i> PDF </h3>
+    </a>
+    <br>
+    <a href="{{j.chfiles.url}}" target="_blank"><img src="{{ j.chfiles.url }}" alt="image" class="img-fluid" style='width:200px; height:200px; '></a>
+      <br>
+      <video width="320" height="240" controls class="mt-4">
+        <source src="{{j.chfiles.url}}" type="video/mp4">
+        <source src="{{j.chfiles.url}}" type="video/mkv">
+        Your browser does not support the video tag.
+      </video>
+  
+
+     
+
+  </div>
+
+  
+  {% endif %}
+  
+  {% endfor %}
+  
+  {% endif %}
+
+</div>
+
+<div class="container mt-4">
+  <a href="{% url 'deletechapter' id=i.slug book=subjectslug %}" class="btn btn-danger">Delete Chapter</a>
+<a href="{% url 'addcontent'  id=i.slug book=subjectslug %}" class="btn btn-success">Add Content </a>
+</div>
+{% endfor %}
+
+{% else %}
+
+<h3 class="text-center">No Content Available</h3>
+
+{% endif %}
+
+
+      
+        {% endif %}
+       
     </div>
     
     <script>

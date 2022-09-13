@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.shortcuts import HttpResponse,HttpResponseRedirect
 from django.contrib import messages
-from .models import teacher,course
+from .models import chapter_content, teacher,course,chapter
 from .middleware import teacherAuth
 from django.utils.decorators import method_decorator
 # Create your views here.
@@ -165,8 +165,9 @@ class openCourse(View):
                     courses = course.objects.filter(Q(slug=book) & Q(user= teacher.objects.get(email=email)))
 
                     if courses.exists():
+                        chpaters = chapter.objects.filter( Q(user = teacher.objects.get(email= request.session['email'])) & Q(course = course.objects.get(slug=book)))
                         return render(request, 'cms/course.html',{
-                            'name' :name,'email' :email,'course':courses
+                            'name' :name,'email' :email,'course':courses,'chapters':chpaters,'ch':True,'subjectslug':book
                         })
                     else:
                         return HttpResponse('invalid request')
@@ -176,3 +177,241 @@ class openCourse(View):
                 return render(request,'cms/login.html')
         else:
             return render(request,'cms/login.html')
+
+
+#addChapter
+class addChapter(View):
+    def get(self, request,book):
+        if 'email' in request.session:
+            if 'name' in request.session:
+                name = request.session['name']
+                email = request.session['email']
+
+                isexist = teacher.objects.filter(Q(email=email) & Q(name=name)).exists()
+
+                if isexist:
+                    
+                    iscourse = course.objects.filter(Q(slug=book) & Q(user = teacher.objects.get(email= request.session['email']))).exists()
+
+                   #chapters your
+
+                    
+                
+                    if iscourse:
+                        subject = course.objects.get(slug=book) 
+                        
+
+                   
+
+                        return render(request,'cms/addchapter.html',{
+                            'name':name,
+                            'email':email,
+                            'subject':subject.cname,
+                          
+                        })
+                    else:
+                        return HttpResponse('Invalid Request')
+
+                else:
+                    return render(request,'cms/login.html')
+            else:
+                return render(request,'cms/login.html')
+        else:
+            return render(request,'cms/login.html')
+    def post(self, request,book):
+        number = request.POST.get('number')
+        title = request.POST.get('title')
+        disp = request.POST.get('disp')
+
+        if 'chimg'  in request.FILES:
+            img = request.FILES['chimg']
+        else:
+            img=False
+        if 'chfiles'  in request.FILES:
+            file = request.FILES['chfiles']
+        else:
+            file = False
+        
+        if number =='':
+            messages.info(request,'Please enter chapter number')
+            return HttpResponseRedirect(f'/cms/add/chapter/{book}/')
+            
+        if title == '':
+            messages.info(request,'Please enter title of chapter  ')
+            return HttpResponseRedirect(f'/cms/add/chapter/{book}/')
+
+        if disp.strip() == '':
+            dispcription='Not Available'
+        else:
+            dispcription =disp
+        
+
+        chapter.objects.create(title=title,chnumber=number,disp=dispcription,chimg=img,chfiles=file,user = teacher.objects.get(email= request.session['email']),course=course.objects.get(slug=book))
+
+        return HttpResponseRedirect(f'/cms/open/{book}/')
+
+
+class openChapter(View):
+    def get(self, request,book,chapterslug):
+        if 'email' in request.session:
+            if 'name' in request.session:
+                name = request.session['name']
+                email = request.session['email']
+
+                isexist = teacher.objects.filter(Q(email=email) & Q(name=name)).exists()
+
+                if isexist:
+                    
+                    courses = course.objects.filter(Q(slug=book) & Q(user= teacher.objects.get(email=email)))
+
+                   #chapters your
+                    if courses.exists():
+                        chpaters = chapter.objects.filter(Q(user = teacher.objects.get(email= request.session['email'])) & Q(course = course.objects.get(slug=book)))
+
+                        chapterdata = chapter.objects.filter(Q(slug=chapterslug) & Q(user = teacher.objects.get(email= request.session['email'])) & Q(course = course.objects.get(slug=book)))
+
+                        coursename =course.objects.get(slug=book)
+
+                        #checking the related content for this chapter     
+
+                        contents = chapter_content.objects.filter(chapter=chapter.objects.get(slug=chapterslug))
+                        
+
+                        print(contents)
+                        return render(request, 'cms/course.html',{
+                            'name' :name,'email' :email,'course':courses,'chapters':chpaters,'ch':False,'subjectslug':book,'chapterdata':chapterdata,'coursename' : coursename.cname,
+                            'contents':contents
+                            })
+
+                    else:
+                        return HttpResponse('Invalid request')
+
+                    
+                
+                  
+                else:
+                    return render(request,'cms/login.html')
+            else:
+                return render(request,'cms/login.html')
+        else:
+            return render(request,'cms/login.html')
+
+
+
+
+
+class deleteChapter(View):
+    def get(self, request,id,book):
+        if 'email' in request.session:
+            if 'name' in request.session:
+                name = request.session['name']
+                email = request.session['email']
+
+                isexist = teacher.objects.filter(Q(email=email) & Q(name=name)).exists()
+
+                if isexist:
+                    
+                    chapters = chapter.objects.filter(Q(slug =id) & Q(user =  teacher.objects.get(email= request.session['email'])))
+
+                   #chapters your
+                    if chapters.exists():
+                        
+                        chapter.objects.filter(Q(user = teacher.objects.get(email= request.session['email'])) & Q(slug =id)).delete()
+
+
+
+                        return HttpResponseRedirect(f'/cms/open/{book}/')
+                    
+
+                    else:
+                        return HttpResponse('Invalid request')
+
+                    
+                
+                  
+                else:
+                    return render(request,'cms/login.html')
+            else:
+                return render(request,'cms/login.html')
+        else:
+            return render(request,'cms/login.html')
+
+
+
+
+
+
+class addcontent(View):
+    def get(self, request,id,book):
+        if 'email' in request.session:
+            if 'name' in request.session:
+                name = request.session['name']
+                email = request.session['email']
+
+                isexist = teacher.objects.filter(Q(email=email) & Q(name=name)).exists()
+
+                if isexist:
+                    
+                    chapters = chapter.objects.filter(Q(slug =id) & Q(user =  teacher.objects.get(email= request.session['email'])))
+
+                   #chapters your
+                    if chapters.exists():
+
+                        bookname = course.objects.filter(Q(slug =book))
+
+                        if bookname.exists():
+                            bname = course.objects.get(slug =book)
+                            cname =   chapter.objects.get(slug =id).title
+
+                            return render(request, 'cms/addcontent.html',{
+                            'name' :name,'email' :email,'bookname' :bname.cname, 'chname' :cname,
+                                })
+                        else:
+                            return HttpResponse('This book dose not exist')
+                    
+
+                    else:
+                        return HttpResponse('Invalid request')
+
+                    
+                
+                  
+                else:
+                    return render(request,'cms/login.html')
+            else:
+                return render(request,'cms/login.html')
+        else:
+            return render(request,'cms/login.html')
+
+    def post(self, request,id,book):
+        title = request.POST.get('title')
+        dispcription = request.POST.get('disp')
+
+        if 'chimg'  in request.FILES:
+            img = request.FILES['chimg']
+        else:
+            img=False
+        if 'chfiles'  in request.FILES:
+            file = request.FILES['chfiles']
+        else:
+            file = False
+
+        if dispcription.strip() == '': 
+            disp = 'Not Available'
+        else:
+            disp = dispcription
+
+        if title.strip() =='':
+          
+            messages.info(request,'Enter the title')
+            return HttpResponseRedirect(f'/cms/add/chapter/content/{id}/{book}/')
+    
+        
+        
+
+        chapter_content.objects.create(title=title,dispcription=disp,chimg=img,chfiles=file,chapter=chapter.objects.get(slug=id))
+
+
+        return HttpResponseRedirect(f'/cms/open/chapter/{book}/{id}/')
+
+    

@@ -1,0 +1,62 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %}
+<title>Chapter Add</title>
+{% endblock title %}
+
+
+{% block content %}
+
+{% include 'core/navbar.html' %}
+{% if messages %}
+{% for k in messages %} 
+
+<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert">
+    <strong>{{k}}</strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+
+{% endfor %}
+{% endif %}
+<div class="container mt-2">
+    <p><b class="text-center bg-dark text-light">Teacher Portal</b></p>
+
+    
+    <p class="text-dark mt-2"><b>Welcome <span class="text-success">{{name | capfirst  }}</span> <br>{{email}} </b>  </p>
+
+    <p><b class="text-danger"><a href="{% url 'logoutcms' %}" class="text-danger">Logout <i class="fa-solid fa-power-off"></i></a>  </b></p>
+    <p><b class="text-danger"><a href="{% url 'home' %}" class="text-primary">My Courses <i class="fas fa-book"></i></a>  </b></p>
+
+    <hr>
+
+</div>
+
+<div class="mt-2 container">
+
+    <h4>Add Chapter To <span class="text-danger">"{{subject}}"</span> </h4>
+
+</div>
+
+
+<div class="mt-2 alert alert-danger container">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <input type="text" name="title" id="title" placeholder="Chapter name" class="form-control mt-2" required>
+
+        <input type="number" name="number" id="number" placeholder="Number" class="form-control mt-2" required>
+
+        <textarea name="disp" id="disp" cols="30" rows="10" placeholder='dispcription' class="form-control mt-2"></textarea>
+
+        <label for="img" class="mt-2">Image</label>
+        <input type="file" name="chimg" id="img" placeholder="Image" class="form-control mt-2" multiple accept="image/*">
+
+        <label for="file" class="mt-2">Files (PDFs and Videos) mp4, mkv, docx, doc, pdf only file support</label>
+        <input type="file" name="chfiles" id="file" placeholder="Image" class="form-control mt-2" multiple accept=".doc,.docx,.pdf,.mp4,.mkv">
+
+        <input type="submit" value="Submit" class="btn btn-primary mt-2">
+    </form>
+</div>
+{% endblock content %}

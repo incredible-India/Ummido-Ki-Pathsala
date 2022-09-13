@@ -53,7 +53,7 @@
             {% if i.disp == '' %}
             <td>No Dispcription</td>
             {% else %}
-            <td>{{i.disp}}</td>
+            <td>{{i.disp | slice:":15"}}..</td>
             {% endif %}
 
             {% if i.cimg == 'False' %}
