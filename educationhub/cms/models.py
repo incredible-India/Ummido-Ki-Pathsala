@@ -1,4 +1,4 @@
-from turtle import title
+
 from django.db import models
 import datetime
 from autoslug import AutoSlugField

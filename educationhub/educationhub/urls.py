@@ -18,15 +18,17 @@ from django.urls import path,include
 
 from django.conf import settings
 from django.conf.urls.static import static
-from . import views
+
 import cms
+import user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index),
+
 
     #createcmy
-    path('cms/',include('cms.urls'))
+    path('cms/',include('cms.urls')),
+    path('',include('user.urls'))
 ]
 
 

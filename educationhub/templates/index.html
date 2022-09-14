@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
 
+{% load static %}
+
 {% block content %}
 
 
@@ -7,7 +9,119 @@
   
 
     {% include 'core/navbar.html' %}
+
+   <div class="container mt-2"> <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
     
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* Create a column layout with Flexbox */
+    .row {
+      display: flex;
+    }
+    
+    /* Left column (menu) */
+    .left {
+      flex: 35%;
+      padding: 15px 0;
+    }
+    
+    .left h2 {
+      padding-left: 8px;
+    }
+    
+    /* Right column (page content) */
+    .right {
+      flex: 65%;
+      padding: 15px;
+    }
+    
+    /* Style the search box */
+    #mySearch {
+      width: 100%;
+      font-size: 18px;
+      padding: 11px;
+      border: 1px solid #ddd;
+    }
+    
+    /* Style the navigation menu inside the left column */
+    #myMenu {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    #myMenu li a {
+      padding: 12px;
+      text-decoration: none;
+      color: black;
+      display: block
+    }
+    
+    #myMenu li a:hover {
+      background-color: #eee;
+    }
+    </style>
+
+    
+    <h2>Search Course <i class="fas fa-search"></i> </h2>
+    <p><span class="text-info">Ummido Ki Pathsala</span> is a <span class="text-danger">free learning plateform</span>, where anyone can learn to their desired course.</p>
+    
+    <div class="row">
+      <div class="left alert alert-info" >
+        <h2>Courses</h2>
+        <input type="text" id="mySearch" onkeyup="myFunction()" placeholder="Search.." title="Type in a category">
+        <ul id="myMenu">
+            {% if courses %}
+
+            {% for i in courses %}
+            <li><a href="{% url 'useropencourse' id=i.slug  %}">{{i.cname | capfirst }}</a></li>
+            {% endfor %}
+            
+         
+            {% else %}
+          
+            <li><a href="#">No Course Yet</a></li>
+            <li><p class="mx-3">We are sorry for that, we have no course yet.</p></li>
+            
+            {% endif %}
+          
+        </ul>
+      </div>
+      
+      <div class="right alert alert-success" >
+        <h2>All Free Courses</h2>
+        <div class="container mt-2">
+            <img src="{% static 'cms/img/s.svg' %}" alt="" class="img-fluid" >
+        </div>
+        
+      </div>
+    </div>
+    
+    <script>
+    function myFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("mySearch");
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("myMenu");
+      li = ul.getElementsByTagName("li");
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+    </script></div>
+    
+
+
 
 
 

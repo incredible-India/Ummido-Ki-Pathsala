@@ -1,0 +1,301 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+
+<title>Course</title>
+
+{% endblock title %}
+
+
+{% load static %}
+
+{% block content %}
+
+
+{% include 'core/navbar.html' %}
+
+
+<div class="container mt-2">
+    <a href="{% url 'homepage' %}" class="text-success"><i class="fas fa-book">All Courses</i></a>
+</div>
+
+
+<div class="container mt-2"> <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    /* Create a column layout with Flexbox */
+    .row {
+      display: flex;
+    }
+    
+    /* Left column (menu) */
+    .left {
+      flex: 35%;
+      padding: 15px 0;
+    }
+    
+    .left h2 {
+      padding-left: 8px;
+    }
+    
+    /* Right column (page content) */
+    .right {
+      flex: 65%;
+      padding: 15px;
+    }
+    
+    /* Style the search box */
+    #mySearch {
+      width: 100%;
+      font-size: 18px;
+      padding: 11px;
+      border: 1px solid #ddd;
+    }
+    
+    /* Style the navigation menu inside the left column */
+    #myMenu {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    #myMenu li a {
+      padding: 12px;
+      text-decoration: none;
+      color: black;
+      display: block
+    }
+    
+    #myMenu li a:hover {
+      background-color: #eee;
+    }
+    </style>
+
+ 
+    <h3 class="text-center">{{course.cname | capfirst }}</h3>
+
+
+    
+    <hr>
+    <h2>Search Chapters<i class="fas fa-search"></i> </h2>
+    <p><span class="text-info">Ummido Ki Pathsala</span> is a <span class="text-danger">free learning plateform</span>, where anyone can learn to their desired course.</p>
+    
+  
+    <div class="row">
+      <div class="left alert alert-warning" >
+        <h2>Chapters</h2>
+        <input type="text" id="mySearch" onkeyup="myFunction()" placeholder="Search.." title="Type in a category">
+        <ul id="myMenu">
+            {% if chapters %}
+
+            {% for i in chapters %}
+            <li><a href="{% url 'useropenchapter' id=i.slug cid=i.course.slug  %}">{{i.title}}</a></li>
+            {% endfor %}
+            
+         
+            {% else %}
+          
+            <li><a href="#">No Chapters Yet</a></li>
+            
+            
+            {% endif %}
+          
+        </ul>
+      </div>
+      
+      <div class="right alert alert-light" >
+       
+        {% if ch %}
+        
+        <h2 class='text-danger'>{{course.cname | capfirst }}</h2>
+        <em>Updated : {{course.dateof}} <br> Author: {{course.user.name | capfirst}} </em>
+        <hr>
+        <h5>Dispcription</h5>
+        {% if course.disp %}
+        <p class="alert alert-dark text-dark" ><b >{{course.disp | capfirst}}</b></p>
+        {% else %}
+        <p><b>No Dispcription Available</b></p>
+        {% endif %}
+       
+     
+        <div class="container mt-2">
+
+            {% if course.cimg != 'False' %}
+            
+            <a href="{{ course.cimg.url }}" target="_blank"><img src="{{ course.cimg.url }}" alt="" class="img-fluid" style="width: 100%; height:350px;"></a>
+            {% endif %}
+        </div>
+        
+        {% else %}
+
+        {% comment %} chapter   {% endcomment %}
+
+
+        {% if chapters %}
+
+        {% if pchapter %}
+        
+
+        {% for i in pchapter %}
+        
+        <h3 class='text-success'>Course : {{i.course.cname | capfirst }}</h3>
+        <em>Updated : {{i.course.dateof}}</em> <br>
+        <em>Author : {{i.user.name | capfirst}}</em>
+<hr>
+        <h3 class='text-light bg-dark'>Chapter : {{i.title | capfirst}}</h3>
+        <em>Updated : {{i.dateof }}</em> <br>
+        <em>Chapter Number : {{i.chnumber }}</em> <br>
+        
+        <br>
+        <h3>Dispcription</h3>
+
+        <p class='text-danger'><b>{{i.disp | capfirst}}</b></p>
+
+        <div class="container mt-2">
+
+          {% if i.chimg != 'False' %}
+
+          <a href="{{ i.chimg.url }}" target="_blank"><img src="{{ i.chimg.url }}" alt="" class="img-fluid" style="width: 100%; height:350px;"></a>
+          {% endif %}
+
+          {% if i.chfiles != 'False' %}
+        
+          {% if  type %}
+          
+          <br>
+          <hr>
+          <h4 class='mt-2'>Video</h4>
+          <video width="320" height="240" controls class="mt-4">
+            <source src="{{i.chfiles.url}}" type="video/mp4">
+            <source src="{{i.chfiles.url}}" type="video/mkv">
+            Your browser does not support the video tag.
+          </video>
+
+          {% else %}
+          <br> 
+<hr>
+
+<h4 class='mt-2'>Download PDF</h4>
+          <a href="{{i.chfiles.url}}" target="_blank" class="mt-2"><h3><i class="fa-solid fa-file-pdf mt-2" >Download PDF</i></h3> </a>
+
+          {% endif %}
+
+         
+
+
+          {% endif %}
+
+        </div>
+
+
+
+        {% endfor %}
+
+        {% comment %} more content related to this chapter   {% endcomment %}
+        {% if more %}
+        
+        {% for i in more %}
+        
+        <hr>
+
+        <h3 ><b>{{i.title | capfirst}}</b></h3>
+
+        <p class='text-danger'><b>{{i.dispcription | capfirst}}</b></p>
+
+        {% if i.chimg != 'False' %}
+
+          <a href="{{ i.chimg.url }}" target="_blank"><img src="{{ i.chimg.url }}" alt="" class="img-fluid mt-2" style="width: 100%; height:350px;"></a>
+        {% endif %}
+
+          {% if i.chfiles != 'False' %}
+        
+          {% if  ctype.length != 0 %}
+          
+        
+        
+          {% for data in ctype %}
+
+
+          {% if data.id == i.id %}
+          
+          
+          {% if data.types == 2 %}
+          <br>
+          <h4 class='mt-2'>Download PDF</h4>
+          <a href="{{i.chfiles.url}}" target="_blank" class="mt-2"><h3><i class="fa-solid fa-file-pdf mt-2" >Download PDF</i></h3> </a>
+          {% else %}
+          <br>
+          <h4 class='mt-2'>Video</h4>
+          <video width="320" height="240" controls class="mt-4">
+            <source src="{{i.chfiles.url}}" type="video/mp4">
+            <source src="{{i.chfiles.url}}" type="video/mkv">
+            Your browser does not support the video tag.
+          </video>
+          
+          {% endif %}
+
+
+          {% endif %}
+          
+          {% endfor %}
+
+     
+          {% endif %}
+
+         
+
+
+          {% endif %}
+
+
+
+        {% endfor %}
+<hr>
+        <p><b class="text-danger">End Of Content</b></p>
+        
+        {% endif %}
+        
+        {% else %}
+
+            
+        <h3>No content Yet</h3>
+        {% endif %}
+
+        {% else %}
+    
+        <h3>No content Yet</h3>
+    
+
+        {% endif %}
+        
+        {% endif %}
+        
+        
+      </div>
+    </div>
+    
+    <script>
+    function myFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("mySearch");
+      filter = input.value.toUpperCase();
+      ul = document.getElementById("myMenu");
+      li = ul.getElementsByTagName("li");
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+    </script></div>
+
+{% endblock content %}
