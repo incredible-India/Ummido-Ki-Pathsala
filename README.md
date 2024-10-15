@@ -23,7 +23,11 @@
 To run the **Ummido-Ki-Pathsala** project locally, follow these steps:
 
 ### Prerequisites
+- Python 3.x installed on your machine.
+- Django framework installed. You can install it using pip:
 
+  ```bash
+  pip install Django
 ## Instruction to run locally
 
 1. Download the Project Clone or download this repository to your local machine.
@@ -45,8 +49,4 @@ To run the **Ummido-Ki-Pathsala** project locally, follow these steps:
     <hr>
     Need Any Project Please contact at 8604470501 
 
-- Python 3.x installed on your machine.
-- Django framework installed. You can install it using pip:
 
-  ```bash
-  pip install Django
